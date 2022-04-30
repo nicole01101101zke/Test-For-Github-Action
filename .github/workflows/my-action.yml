@@ -1,4 +1,4 @@
-name: build code book
+name: have a try
 
 on:
   workflow_dispatch:
