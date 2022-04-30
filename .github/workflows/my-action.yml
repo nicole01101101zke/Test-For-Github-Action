@@ -8,6 +8,6 @@ jobs:
     steps:
       - uses: lothindir/pandoc-markdown-action@v0.1
         with:
-          markdown: "rapport.md"
-          pdf: "Rapport"
+          markdown: "README.md"
+          pdf: "README"
           template: "kate,monochrome"
