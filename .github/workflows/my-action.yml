@@ -1,3 +1,35 @@
-- name: Build pdf from makrdown with bibliography
-  uses: flat35hd99/actions_for_latex_markdown@v1.0.4
+name: build code book
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '.github/workflows/**.yml'
+      - 'assets/**'
+      - 'code/**'
+      - 'python/**'
+    tags:        
+      - v*             # Push events to v1 tag
+
+jobs:
+  convert:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Build pdf from makrdown with bibliography
+        uses: flat35hd99/actions_for_latex_markdown@v1.0.4
+      - name: UploadArtifact
+        uses: actions/upload-artifact@master
+        with:
+          name: build-${{ github.run_number }}
+          path: artifact
+
+      - name: PushCommit
+        run: |
+          git config user.name nicole01101101zke
+          git config user.email 19966422680@163.com
+          git add .
+          git commit -m "1"
+          git push
 
