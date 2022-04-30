@@ -3,7 +3,6 @@ on:
     paths:
       - 'doc/**'
       - '.github/workflows/**.yml'
-      - 'tmp/**'
 
 name: try
 
