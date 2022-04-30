@@ -6,10 +6,8 @@ jobs:
   convert_via_pandoc:
     runs-on: ubuntu-18.04
     steps:
-      - uses: docker://pandoc/core:2.9
+      - uses: lothindir/pandoc-markdown-action@v0.1
         with:
-          args: "--help" # gets appended to pandoc command
-          
-      - name: Pandoc generator
-        uses: Lothindir/pandoc-markdown-action@v0.4
-
+          markdown: "rapport.md"
+          pdf: "Rapport"
+          template: "kate,monochrome"
