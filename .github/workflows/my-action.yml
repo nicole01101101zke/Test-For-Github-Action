@@ -1,22 +1,65 @@
-on:
-  push:
-    paths:
-      - 'doc/**'
-      - '.github/workflows/**.yml'
+name: build code book
 
-name: try
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '.github/workflows/**.yml'
+      - 'doc/**'
+    tags:        
+      - v*             # Push events to v1 tag
 
 jobs:
-  makepdfs:
-    runs-on: ubuntu-latest
+  convert:
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v1
-    - uses: mkrakowitzer/actions-makepdfs@master
-      if: github.ref == 'refs/heads/master'
-      with:
-        markdown_dir: doc
-        output_dir: tmp
-    - uses: actions/upload-artifact@v1
-      with:
-        name: platform-architecture-docs
-        path: tmp
+      - uses: actions/checkout@v2 # access repo files
+      - name: PandocLatex
+        uses: ./
+        with:
+          args: >-
+            pandoc doc/test1.md 
+            -o output/test1.pdf
+            --from markdown 
+            --template template/eisvogel.latex 
+            --resource-path=assets 
+            --number-sections 
+            --top-level-division=chapter 
+            --shift-heading-level-by=-1 
+            --highlight-style monochrome 
+            --pdf-engine "xelatex" 
+            --toc 
+            -V CJKmainfont="Noto Sans Mono CJK SC"
+            -V toc-own-page="true" 
+            -V book
+            -V code-block-font-size="\normalsize"
+            
+      - name: UploadArtifact
+        uses: actions/upload-artifact@master
+        with:
+          name: build-${{ github.run_number }}
+          path: artifact
+
+      - name: PushCommit
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: |
+          git config user.name nicole01101101zke
+          git config user.email 19966422680@163.com
+          git add .
+          git commit -m "CI: produce build${{ github.run_number }}.pdf"
+          git push
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifact/build.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
