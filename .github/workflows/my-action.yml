@@ -24,7 +24,6 @@ jobs:
             pandoc doc/test1.md 
             -o output/test1.pdf
             --from markdown 
-            --template template/eisvogel.latex 
             --resource-path=assets 
             --number-sections 
             --top-level-division=chapter 
