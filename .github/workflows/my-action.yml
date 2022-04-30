@@ -9,3 +9,7 @@ jobs:
       - uses: docker://pandoc/core:2.9
         with:
           args: "--help" # gets appended to pandoc command
+          
+      - name: Pandoc generator
+        uses: Lothindir/pandoc-markdown-action@v0.4
+
