@@ -1,30 +1,11 @@
-name: build code book
+name: Simple Usage
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - 'main'
-    paths:
-      - '.github/workflows/**.yml'
-      - 'assets/**'
-      - 'code/**'
-      - 'python/**'
-    tags:        
-      - v*             # Push events to v1 tag
+on: push
 
 jobs:
-  convert:
+  convert_via_pandoc:
     runs-on: ubuntu-18.04
     steps:
-      - name: Build pdf from makrdown with bibliography
-        uses: flat35hd99/actions_for_latex_markdown@v1.0.4
-
-      - name: PushCommit
-        run: |
-          git config user.name nicole01101101zke
-          git config user.email 19966422680@163.com
-          git add .
-          git commit -m "1"
-          git push
-
+      - uses: docker://pandoc/core:2.9
+        with:
+          args: "--help" # gets appended to pandoc command
