@@ -1,2 +1,3 @@
-- name: Markdown to PDF
-  uses: valtyr/pandoc-action@v0.1-alpha
+- name: Build pdf from makrdown with bibliography
+  uses: flat35hd99/actions_for_latex_markdown@v1.0.4
+
